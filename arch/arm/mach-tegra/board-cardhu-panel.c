@@ -53,7 +53,7 @@
 /* common pins( backlight ) for all display boards */
 //#define cardhu_bl_enb			TEGRA_GPIO_PH2
 //#define cardhu_bl_pwm			TEGRA_GPIO_PH0
-//#define cardhu_hdmi_hpd		TEGRA_GPIO_PN7
+#define cardhu_hdmi_hpd		TEGRA_GPIO_PN7
 
 #ifdef CONFIG_TEGRA_DC
 //static struct regulator *cardhu_hdmi_reg = NULL;
@@ -233,9 +233,9 @@ static int surface_rt_panel_postpoweron(void)
 }
 
 //#ifdef CONFIG_TEGRA_DC
-//static int cardhu_hdmi_vddio_enable(struct device *dev)
-//{
-//	int ret;
+static int cardhu_hdmi_vddio_enable(struct device *dev)
+{
+	int ret =0;
 //	if (!cardhu_hdmi_vddio) {
 //		cardhu_hdmi_vddio = regulator_get(dev, "vdd_hdmi_con");
 //		if (IS_ERR_OR_NULL(cardhu_hdmi_vddio)) {
@@ -252,21 +252,21 @@ static int surface_rt_panel_postpoweron(void)
 //		cardhu_hdmi_vddio = NULL;
 //		return ret;
 //	}
-//	return ret;
-//}
+	return ret;
+}
 
-//static int cardhu_hdmi_vddio_disable(void)
-//{
+static int cardhu_hdmi_vddio_disable(void)
+{
 //	if (cardhu_hdmi_vddio) {
 //		regulator_disable(cardhu_hdmi_vddio);
 //		regulator_put(cardhu_hdmi_vddio);
 //		cardhu_hdmi_vddio = NULL;
 //	}
-//	return 0;
-//}
+	return 0;
+}
 
-//static int cardhu_hdmi_enable(struct device *dev)
-//{
+static int cardhu_hdmi_enable(struct device *dev)
+{
 //	int ret;
 //	if (!cardhu_hdmi_reg) {
 //		cardhu_hdmi_reg = regulator_get(dev, "avdd_hdmi");
@@ -296,19 +296,19 @@ static int surface_rt_panel_postpoweron(void)
 //		pr_err("hdmi: couldn't enable regulator avdd_hdmi_pll\n");
 //		return ret;
 //	}
-//	return 0;
-//}
+	return 0;
+}
 
-//static int cardhu_hdmi_disable(void)
-//{
+static int cardhu_hdmi_disable(void)
+{
 //	regulator_disable(cardhu_hdmi_reg);
 //	regulator_put(cardhu_hdmi_reg);
 //	cardhu_hdmi_reg = NULL;
 //	regulator_disable(cardhu_hdmi_pll);
 //	regulator_put(cardhu_hdmi_pll);
 //	cardhu_hdmi_pll = NULL;
-//	return 0;
-//}
+	return 0;
+}
 
 static struct resource cardhu_disp1_resources[] = {
 	{
@@ -388,8 +388,8 @@ static struct tegra_fb_data cardhu_fb_data = {
 
 static struct tegra_fb_data cardhu_hdmi_fb_data = {
 	.win		= 0,
-	.xres		= 640,
-	.yres		= 480,
+	.xres		= 1920,
+	.yres		= 1200,
 #ifdef CONFIG_TEGRA_DC_USE_HW_BPP
 	.bits_per_pixel = -1,
 #else
@@ -403,14 +403,16 @@ static struct tegra_dc_out cardhu_disp2_out = {
 	.flags		= TEGRA_DC_OUT_HOTPLUG_HIGH,
 	.parent_clk	= "pll_d2_out0",
 	.dcc_bus	= 3,
-//	.hotplug_gpio	= cardhu_hdmi_hpd,
+	.hotplug_gpio	= cardhu_hdmi_hpd,
 	.max_pixclock	= KHZ2PICOS(148500),
 	.align		= TEGRA_DC_ALIGN_MSB,
 	.order		= TEGRA_DC_ORDER_RED_BLUE,
-//	.enable		= cardhu_hdmi_enable,
-//	.disable	= cardhu_hdmi_disable,
-//	.postsuspend	= cardhu_hdmi_vddio_disable,
-//	.hotplug_init	= cardhu_hdmi_vddio_enable,
+	.height = 135,
+	.width = 217,
+	.enable		= cardhu_hdmi_enable,
+	.disable	= cardhu_hdmi_disable,
+	.postsuspend	= cardhu_hdmi_vddio_disable,
+	.hotplug_init	= cardhu_hdmi_vddio_enable,
 };
 
 static struct tegra_dc_platform_data cardhu_disp2_pdata = {
@@ -666,10 +668,10 @@ int __init cardhu_panel_init(void)
 		__tegra_clear_framebuffer(&cardhu_nvmap_device,
 					  tegra_fb2_start, tegra_fb2_size);
 
-	if (!err) {
-		cardhu_disp2_device.dev.parent = &phost1x->dev;
-		err = platform_device_register(&cardhu_disp2_device);
-	}
+//	if (!err) {
+//		cardhu_disp2_device.dev.parent = &phost1x->dev;
+//		err = platform_device_register(&cardhu_disp2_device);
+//	}
 #endif
 
 #if defined(CONFIG_TEGRA_GRHOST) && defined(CONFIG_TEGRA_NVAVP)
