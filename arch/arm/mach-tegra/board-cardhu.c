@@ -182,31 +182,36 @@ static noinline void __init cardhu_setup_bluedroid_pm(void)
 
 static __initdata struct tegra_clk_init_table cardhu_clk_init_table[] = {
 	/* name		parent		rate		enabled */
-	{ "pll_m",	NULL,		0,		false},
-	{ "hda",	"pll_p",	108000000,	false},
-	{ "hda2codec_2x","pll_p",	48000000,	false},
-	{ "pwm",	"pll_p",	5100000,	false},
-	{ "blink",	"clk_32k",	32768,		true},
-	{ "i2s0",	"pll_a_out0",	0,		false},
-	{ "i2s1",	"pll_a_out0",	0,		false},
-	{ "i2s3",	"pll_a_out0",	0,		false},
-	{ "spdif_out",	"pll_a_out0",	0,		false},
-	{ "d_audio",	"clk_m",	12000000,	false},
-	{ "dam0",	"clk_m",	12000000,	false},
-	{ "dam1",	"clk_m",	12000000,	false},
-	{ "dam2",	"clk_m",	12000000,	false},
-	{ "audio1",	"i2s1_sync",	0,		false},
-	{ "audio3",	"i2s3_sync",	0,		false},
-	{ "vi_sensor",	"pll_p",	150000000,	false},
-	{ "i2c1",	"pll_p",	3200000,	false},
-	{ "i2c2",	"pll_p",	3200000,	false},
-	{ "i2c3",	"pll_p",	3200000,	false},
-	{ "i2c4",	"pll_p",	3200000,	false},
-	{ "i2c5",	"pll_p",	3200000,	false},
-	{ "vi",		"pll_p",	0,		false},
-	{ NULL,		NULL,		0,		0},
-};
+{"pll_m",	NULL,		0,		false},
+	{"audio1",	"i2s1_sync",	0,		false},
+	{"audio2",	"i2s2_sync",	0,		false},
+	{"audio3",	"i2s3_sync",	0,		false},
+	{"audio4",	"i2s4_sync",	0,		false},
+	{"blink",	"clk_32k",	32768,		true},
+	{"d_audio",	"clk_m",	12000000,	false},
+	{"dam0",	"clk_m",	12000000,	false},
+	{"dam1",	"clk_m",	12000000,	false},
+	{"dam2",	"clk_m",	12000000,	false},
+	{"hda",		"pll_p",	108000000,	false},
+	{"hda2codec_2x","pll_p",	48000000,	false},
+	{"i2c1",	"pll_p",	3200000,	false},
+	{"i2c2",	"pll_p",	3200000,	false},
+	{"i2c3",	"pll_p",	3200000,	false},
+	{"i2c4",	"pll_p",	3200000,	false},
+	{"i2c5",	"pll_p",	3200000,	false},
+	{"i2s0",	"pll_a_out0",	0,		false},
+	{"i2s1",	"pll_a_out0",	0,		false},
+	{"i2s2",	"pll_a_out0",	0,		false},
+	{"i2s3",	"pll_a_out0",	0,		false},
+	{"i2s4",	"pll_a_out0",	0,		false},
+	{"pll_p",	NULL,		0,		false},
+	{"pll_c",       NULL,           0,              false},
+	{"pwm",		"pll_p",	5100000,	false},
+	{"spdif_out",	"pll_a_out0",	0,		false},
+	{NULL,		NULL,		0,		0},
 
+
+};
 static struct tegra_i2c_platform_data cardhu_i2c1_platform_data = {
 	.adapter_nr	= 0,
 	.bus_count	= 1,
@@ -219,7 +224,7 @@ static struct tegra_i2c_platform_data cardhu_i2c1_platform_data = {
 static struct tegra_i2c_platform_data cardhu_i2c2_platform_data = {
 	.adapter_nr	= 1,
 	.bus_count	= 1,
-	.bus_clk_rate	= { 400000, 0 },
+	.bus_clk_rate	= { 100000, 0 },
 	.is_clkon_always = true,
 	.scl_gpio		= {TEGRA_GPIO_PT5, 0},
 	.sda_gpio		= {TEGRA_GPIO_PT6, 0},
@@ -490,6 +495,7 @@ static struct platform_device *cardhu_devices[] __initdata = {
 	&tegra_dam_device2,
 	&tegra_i2s_device0,
 	&tegra_i2s_device1,
+	&tegra_i2s_device2,
 	&tegra_i2s_device3,
 	&tegra_spdif_device,
 	&spdif_dit_device,
@@ -499,19 +505,14 @@ static struct platform_device *cardhu_devices[] __initdata = {
 	&cardhu_bt_rfkill_device,
 #endif
 	&tegra_pcm_device,
-	&cardhu_audio_wm8962_device,
+
 	&tegra_hda_device,
+	&cardhu_audio_wm8962_device,
 	&tegra_cec_device,
 #if defined(CONFIG_CRYPTO_DEV_TEGRA_AES)
 	&tegra_aes_device,
 #endif
 };
-
-static struct platform_device *cardhu_audio_devices[] __initdata = {
-		&cardhu_audio_wm8962_device,
-
-};
-
 
 
 #if defined(CONFIG_USB_SUPPORT)
@@ -680,7 +681,7 @@ static void __init tegra_cardhu_init(void)
 #endif
 	cardhu_uart_init();
 	platform_add_devices(cardhu_devices, ARRAY_SIZE(cardhu_devices));
-	platform_add_devices(cardhu_audio_devices, ARRAY_SIZE(cardhu_audio_devices));
+	//platform_add_devices(cardhu_audio_devices, ARRAY_SIZE(cardhu_audio_devices));
 	tegra_ram_console_debug_init();
 	tegra_io_dpd_init();
 	cardhu_sdhci_init();
