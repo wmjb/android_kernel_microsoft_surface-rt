@@ -332,27 +332,27 @@ static struct resource cardhu_disp1_resources[] = {
 
 };
 
-//static struct resource cardhu_disp2_resources[] = {
-//	{
-//		.name	= "irq",
-//		.start	= INT_DISPLAY_B_GENERAL,
-//		.end	= INT_DISPLAY_B_GENERAL,
-//		.flags	= IORESOURCE_IRQ,
-//	},
-//	{
-//		.name	= "regs",
-//		.start	= TEGRA_DISPLAY2_BASE,
-//		.end	= TEGRA_DISPLAY2_BASE + TEGRA_DISPLAY2_SIZE - 1,
-//		.flags	= IORESOURCE_MEM,
-//	},
-//	{
-//		.name	= "fbmem",
-//		.flags	= IORESOURCE_MEM,
-//		.start	= 0,
-//		.end	= 0,
-//	},
-//};
-//#endif
+static struct resource cardhu_disp2_resources[] = {
+	{
+		.name	= "irq",
+		.start	= INT_DISPLAY_B_GENERAL,
+		.end	= INT_DISPLAY_B_GENERAL,
+		.flags	= IORESOURCE_IRQ,
+	},
+	{
+		.name	= "regs",
+		.start	= TEGRA_DISPLAY2_BASE,
+		.end	= TEGRA_DISPLAY2_BASE + TEGRA_DISPLAY2_SIZE - 1,
+		.flags	= IORESOURCE_MEM,
+	},
+	{
+		.name	= "fbmem",
+		.flags	= IORESOURCE_MEM,
+		.start	= 0,
+		.end	= 0,
+	},
+};
+
 
 
 static struct tegra_dc_mode surface_rt_panel_modes[] = {
@@ -373,53 +373,53 @@ static struct tegra_dc_mode surface_rt_panel_modes[] = {
 };
 
 
-//#ifdef CONFIG_TEGRA_DC
+#ifdef CONFIG_TEGRA_DC
 static struct tegra_fb_data cardhu_fb_data = {
 	.win		= 0,
 	.xres		= 1366,
 	.yres		= 768,
-//#ifdef CONFIG_TEGRA_DC_USE_HW_BPP
-//	.bits_per_pixel = -1,
-//#else
+#ifdef CONFIG_TEGRA_DC_USE_HW_BPP
+	.bits_per_pixel = -1,
+#else
 	.bits_per_pixel	= 32,
-//#endif
-	//.flags		= TEGRA_FB_FLIP_ON_PROBE,
+#endif
+	.flags		= TEGRA_FB_FLIP_ON_PROBE,
 };
 
-//static struct tegra_fb_data cardhu_hdmi_fb_data = {
-//	.win		= 0,
-//	.xres		= 640,
-//	.yres		= 480,
-//#ifdef CONFIG_TEGRA_DC_USE_HW_BPP
-//	.bits_per_pixel = -1,
-//#else
-//	.bits_per_pixel	= 32,
-//#endif
-//	.flags		= TEGRA_FB_FLIP_ON_PROBE,
-//};
+static struct tegra_fb_data cardhu_hdmi_fb_data = {
+	.win		= 0,
+	.xres		= 640,
+	.yres		= 480,
+#ifdef CONFIG_TEGRA_DC_USE_HW_BPP
+	.bits_per_pixel = -1,
+#else
+	.bits_per_pixel	= 32,
+#endif
+	.flags		= TEGRA_FB_FLIP_ON_PROBE,
+};
 
-//static struct tegra_dc_out cardhu_disp2_out = {
-//	.type		= TEGRA_DC_OUT_HDMI,
-//	.flags		= TEGRA_DC_OUT_HOTPLUG_HIGH,
-//	.parent_clk	= "pll_d2_out0",
-//	.dcc_bus	= 3,
+static struct tegra_dc_out cardhu_disp2_out = {
+	.type		= TEGRA_DC_OUT_HDMI,
+	.flags		= TEGRA_DC_OUT_HOTPLUG_HIGH,
+	.parent_clk	= "pll_d2_out0",
+	.dcc_bus	= 3,
 //	.hotplug_gpio	= cardhu_hdmi_hpd,
-//	.max_pixclock	= KHZ2PICOS(148500),
-//	.align		= TEGRA_DC_ALIGN_MSB,
-//	.order		= TEGRA_DC_ORDER_RED_BLUE,
+	.max_pixclock	= KHZ2PICOS(148500),
+	.align		= TEGRA_DC_ALIGN_MSB,
+	.order		= TEGRA_DC_ORDER_RED_BLUE,
 //	.enable		= cardhu_hdmi_enable,
 //	.disable	= cardhu_hdmi_disable,
 //	.postsuspend	= cardhu_hdmi_vddio_disable,
 //	.hotplug_init	= cardhu_hdmi_vddio_enable,
-//};
+};
 
-//static struct tegra_dc_platform_data cardhu_disp2_pdata = {
-//	.flags		= TEGRA_DC_FLAG_ENABLED,
-//	.default_out	= &cardhu_disp2_out,
-//	.fb		= &cardhu_hdmi_fb_data,
-//	.emc_clk_rate	= 300000000,
-//};
-//#endif
+static struct tegra_dc_platform_data cardhu_disp2_pdata = {
+	.flags		= TEGRA_DC_FLAG_ENABLED,
+	.default_out	= &cardhu_disp2_out,
+	.fb		= &cardhu_hdmi_fb_data,
+	.emc_clk_rate	= 300000000,
+};
+#endif
 
 static struct tegra_dc_out cardhu_disp1_out = {
 	.align			= TEGRA_DC_ALIGN_MSB,
@@ -467,15 +467,15 @@ static int cardhu_disp1_check_fb(struct device *dev, struct fb_info *info)
 	return info->device == &cardhu_disp1_device.dev;
 }
 
-//static struct platform_device cardhu_disp2_device = {
-//	.name		= "tegradc",
-//	.id		= 1,
-//	.resource	= cardhu_disp2_resources,
-//	.num_resources	= ARRAY_SIZE(cardhu_disp2_resources),
-//	.dev = {
-//		.platform_data = &cardhu_disp2_pdata,
-//	},
-//};
+static struct platform_device cardhu_disp2_device = {
+	.name		= "tegradc",
+	.id		= 1,
+	.resource	= cardhu_disp2_resources,
+	.num_resources	= ARRAY_SIZE(cardhu_disp2_resources),
+	.dev = {
+		.platform_data = &cardhu_disp2_pdata,
+	},
+};
 #else
 static int cardhu_disp1_check_fb(struct device *dev, struct fb_info *info)
 {
@@ -649,27 +649,27 @@ int __init cardhu_panel_init(void)
 		err = platform_device_register(&cardhu_disp1_device);
 	}
 
-//	res = platform_get_resource_byname(&cardhu_disp2_device,
-//					 IORESOURCE_MEM, "fbmem");
-//	res->start = tegra_fb2_start;
-//	res->end = tegra_fb2_start + tegra_fb2_size - 1;
+	res = platform_get_resource_byname(&cardhu_disp2_device,
+					 IORESOURCE_MEM, "fbmem");
+	res->start = tegra_fb2_start;
+	res->end = tegra_fb2_start + tegra_fb2_size - 1;
 
 	/*
 	 * If the bootloader fb2 is valid, copy it to the fb2, or else
 	 * clear fb2 to avoid garbage on dispaly2.
 	 */
-//	if (tegra_bootloader_fb2_size)
-//		__tegra_move_framebuffer(&cardhu_nvmap_device,
-//			tegra_fb2_start, tegra_bootloader_fb2_start,
-//			min(tegra_fb2_size, tegra_bootloader_fb2_size));
-//	else
-//		__tegra_clear_framebuffer(&cardhu_nvmap_device,
-//					  tegra_fb2_start, tegra_fb2_size);
+	if (tegra_bootloader_fb2_size)
+		__tegra_move_framebuffer(&cardhu_nvmap_device,
+			tegra_fb2_start, tegra_bootloader_fb2_start,
+			min(tegra_fb2_size, tegra_bootloader_fb2_size));
+	else
+		__tegra_clear_framebuffer(&cardhu_nvmap_device,
+					  tegra_fb2_start, tegra_fb2_size);
 
-//	if (!err) {
-//		cardhu_disp2_device.dev.parent = &phost1x->dev;
-//		err = platform_device_register(&cardhu_disp2_device);
-//	}
+	if (!err) {
+		cardhu_disp2_device.dev.parent = &phost1x->dev;
+		err = platform_device_register(&cardhu_disp2_device);
+	}
 #endif
 
 #if defined(CONFIG_TEGRA_GRHOST) && defined(CONFIG_TEGRA_NVAVP)
