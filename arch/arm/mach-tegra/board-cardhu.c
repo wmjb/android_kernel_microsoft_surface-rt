@@ -83,6 +83,8 @@
 #include "wdt-recovery.h"
 #include "common.h"
 
+#define TEGRA_BATTERY_EN TEGRA_GPIO_PN3
+
 #if defined(CONFIG_BT_BLUESLEEP) || defined(CONFIG_BT_BLUESLEEP_MODULE)
 static struct rfkill_gpio_platform_data cardhu_bt_rfkill_pdata[] = {
 	{
@@ -643,23 +645,23 @@ static void cardhu_usb_init(void) { }
 static void surface_rt_ec_init(void)
 
 {
-//	int ret;
-//	ret = gpio_request(TEGRA_BATTERY_EN, "ec_gpio");
-//	if (ret)
-//	{
-//		pr_err("EC gpio request failed:%d\n", ret);
-//		return ;
-//	}
-//	else
-//	{
-//		gpio_direction_output(TEGRA_BATTERY_EN, 1);
-//		mdelay(100);
-//	        gpio_set_value(TEGRA_BATTERY_EN, 1);
-//		mdelay(100);
-//		ret = gpio_get_value(TEGRA_BATTERY_EN);
-//
-//		printk(KERN_INFO "Set Surface EC GPIO : %d\n",ret);
-//	}
+	int ret;
+	ret = gpio_request(TEGRA_BATTERY_EN, "ec_gpio");
+	if (ret)
+	{
+		pr_err("EC gpio request failed:%d\n", ret);
+		return ;
+	}
+	else
+	{
+		gpio_direction_output(TEGRA_BATTERY_EN, 1);
+		mdelay(100);
+	        gpio_set_value(TEGRA_BATTERY_EN, 1);
+		mdelay(100);
+		ret = gpio_get_value(TEGRA_BATTERY_EN);
+
+		printk(KERN_INFO "Set Surface EC GPIO : %d\n",ret);
+	}
 }
 
 static void __init tegra_cardhu_init(void)
