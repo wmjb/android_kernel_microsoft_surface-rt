@@ -74,6 +74,7 @@ int cardhu_pins_state_init(void);
 int cardhu_emc_init(void);
 int cardhu_edp_init(void);
 int cardhu_pmon_init(void);
+void __init surface_rt_i2c_hid_init(void);
 
 /* UART port which is used by bluetooth */
 #define BLUETOOTH_UART_DEV_NAME "/dev/ttyHS2"

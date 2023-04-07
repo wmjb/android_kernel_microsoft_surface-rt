@@ -238,6 +238,7 @@ obj-${CONFIG_MACH_CARDHU}               += board-cardhu-power.o
 obj-${CONFIG_MACH_CARDHU}               += board-cardhu-sdhci.o
 obj-${CONFIG_MACH_CARDHU}               += board-cardhu-sensors.o
 obj-${CONFIG_MACH_CARDHU}               += board-cardhu-memory.o
+obj-${CONFIG_MACH_CARDHU} 		+= board-surface-rt-i2c-hid.o
 
 obj-${CONFIG_MACH_KAI}                  += board-touch-kai-synaptics-spi.o
 obj-y                                   += board-touch-raydium_spi.o

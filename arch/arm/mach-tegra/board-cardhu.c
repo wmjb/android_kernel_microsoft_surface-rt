@@ -707,6 +707,7 @@ static void __init tegra_cardhu_init(void)
 	tegra_serial_debug_init(TEGRA_UARTD_BASE, INT_WDT_CPU, NULL, -1, -1);
 	//tegra_vibrator_init();
 	tegra_register_fuse();
+	surface_rt_i2c_hid_init();
 }
 
 static void __init tegra_cardhu_dt_init(void)
