@@ -229,7 +229,7 @@ tegra_throttle_set_cur_state(struct thermal_cooling_device *cdev,
 		pr_info("cdev %s: Throttle state: %lu/%lu Limit: %lu KHz.\n",
 			cdev->type, cur_state, max_state,
 			cpu_cap_freq);
-	soctherm_dump_temps();
+//	soctherm_dump_temps();
 
 	return 0;
 }

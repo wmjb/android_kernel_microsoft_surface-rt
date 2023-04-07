@@ -428,55 +428,6 @@ static const struct file_operations tegra_wdt_fops = {
 	.release	= tegra_wdt_release,
 };
 
-static void watchdog_dumpstack(struct pt_regs * const regs, void *ssp)
-{
-	struct thread_info *real_thread_info = THREAD_INFO(ssp);
-
-	*current_thread_info() = *real_thread_info;
-
-	if (!current)
-		pr_crit("current NULL\n");
-	else
-		pr_crit("pid: %d  comm: %s\n", current->pid,
-				current->comm);
-
-	if (real_thread_info && real_thread_info->task)
-		unwind_backtrace(regs, real_thread_info->task);
-}
-
-static void watchdog_debug_fiq(struct fiq_glue_handler *h, void *regs,
-		void *svc_sp)
-{
-	struct task_struct *g, *p;
-	unsigned int i;
-
-	pr_crit("Watchdog Triggered: dumping current stack...\n");
-
-	/* Pet the watchdog before dumping the stacks */
-	for (i = 0; i < MAX_NR_CPU_WDT; i++) {
-		if (tegra_wdt[i] == NULL)
-			continue;
-		tegra_wdt_ping(tegra_wdt[i]);
-	}
-
-	watchdog_dumpstack(regs, svc_sp);
-
-	pr_crit("Watchdog Triggered: dumping stacks for running "
-			"threads...\n");
-	do_each_thread(g, p) {
-		/* reset the NMI timeout before doing the stack dump. */
-		touch_nmi_watchdog();
-		if (p->state == TASK_RUNNING)
-			sched_show_task(p);
-	} while_each_thread(g, p);
-
-	pr_crit("Watchdog Triggered: restarting...\n");
-	/* cause watchdog to trip ASAP by setting a short timeout */
-	tegra_wdt_disable(tegra_wdt[0]);
-	tegra_wdt[0]->timeout = 0;
-	tegra_wdt_enable(tegra_wdt[0]);
-	while(1);
-}
 
 static int tegra_wdt_probe(struct platform_device *pdev)
 {
@@ -681,16 +632,6 @@ static int tegra_wdt_probe(struct platform_device *pdev)
 	tegra_wdt[pdev->id] = wdt;
 #endif
 
-	wdt->fiq_handler.fiq = watchdog_debug_fiq;
-	ret = fiq_glue_register_handler(&wdt->fiq_handler);
-	if (ret) {
-		dev_err(&pdev->dev, "unable to register FIQ handler, "
-				"ret = %d\n", ret);
-		goto fail;
-	}
-
-	/* Enable the FIQ */
-	tegra_fiq_enable(INT_WDT_CPU);
 
 	pr_info("%s done\n", __func__);
 	return 0;

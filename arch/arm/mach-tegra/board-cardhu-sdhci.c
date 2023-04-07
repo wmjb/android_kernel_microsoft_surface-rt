@@ -58,23 +58,13 @@ static struct wifi_platform_data cardhu_wifi_control = {
 
 static struct resource wifi_resource[] = {
 	[0] = {
-		.name	= "bcm4329_wlan_irq",
+		.name	= "sd8xxx_irq",
 		.flags	= IORESOURCE_IRQ | IORESOURCE_IRQ_HIGHLEVEL | IORESOURCE_IRQ_SHAREABLE,
 	},
 };
 
-static struct platform_device broadcom_wifi_device = {
-	.name		= "bcm4329_wlan",
-	.id		= 1,
-	.num_resources	= 1,
-	.resource	= wifi_resource,
-	.dev		= {
-		.platform_data = &cardhu_wifi_control,
-	},
-};
-
 static struct platform_device marvell_wifi_device = {
-	.name		= "mrvl8797_wlan",
+	.name		= "sd8xxx",
 	.id		= 1,
 	.num_resources	= 0,
 	.dev		= {
@@ -165,9 +155,9 @@ static struct tegra_sdhci_platform_data tegra_sdhci_platform_data2 = {
 };
 
 static struct tegra_sdhci_platform_data tegra_sdhci_platform_data0 = {
-	.cd_gpio = CARDHU_SD_CD,
-	.wp_gpio = CARDHU_SD_WP,
-	.power_gpio = -1,
+	.cd_gpio = TEGRA_GPIO_PI5,
+	.wp_gpio = -1,//CARDHU_SD_WP,
+	.power_gpio = TEGRA_GPIO_PD7,
 	.tap_delay = 0x0F,
 	.ddr_clk_limit = 41000000,
 /*	.is_voltage_switch_supported = true,
@@ -315,7 +305,7 @@ static int __init cardhu_wifi_init(void)
 		gpio_to_irq(TEGRA_GPIO_PO4);
 
 	platform_device_register(&marvell_wifi_device);
-	platform_device_register(&broadcom_wifi_device);
+
 	return 0;
 }
 
@@ -335,20 +325,14 @@ subsys_initcall_sync(cardhu_wifi_prepower);
 
 int __init cardhu_sdhci_init(void)
 {
-	struct board_info board_info;
-	tegra_get_board_info(&board_info);
-	if ((board_info.board_id == BOARD_PM269) ||
-		(board_info.board_id == BOARD_E1257) ||
-		(board_info.board_id == BOARD_PM305) ||
-		(board_info.board_id == BOARD_PM311)) {
-			tegra_sdhci_platform_data0.wp_gpio = PM269_SD_WP;
-			tegra_sdhci_platform_data2.max_clk_limit = 12000000;
-	}
+
+	tegra_sdhci_platform_data2.max_clk_limit = 12000000;
+	
 
 	platform_device_register(&tegra_sdhci_device3);
-	platform_device_register(&tegra_sdhci_device2);
-	platform_device_register(&tegra_sdhci_device0);
 
+	platform_device_register(&tegra_sdhci_device0);
+	platform_device_register(&tegra_sdhci_device2);
 	cardhu_wifi_init();
 	return 0;
 }
