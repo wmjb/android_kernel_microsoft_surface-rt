@@ -717,11 +717,11 @@ static void __init tegra_roth_init(void)
 	platform_add_devices(roth_devices, ARRAY_SIZE(roth_devices));
 	tegra_ram_console_debug_init();
 	tegra_io_dpd_init();
-//	roth_regulator_init();
-	roth_sdhci_init();
+	roth_regulator_init();
+//	roth_sdhci_init();
 //	roth_suspend_init();
-	roth_emc_init();
-	roth_edp_init();
+//	roth_emc_init();
+//	roth_edp_init();
 //	roth_touch_init();
 	/* roth will pass a null board id to panel_init */
 //	roth_panel_init(0);
