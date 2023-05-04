@@ -445,7 +445,7 @@ __tegra_dvfs_set_rate(struct dvfs *d, unsigned long rate)
 	if (rate > freqs[d->num_freqs - 1]) {
 		pr_warn("tegra_dvfs: rate %lu too high for dvfs on %s\n", rate,
 			d->clk_name);
-		return -EINVAL;
+//		return -EINVAL;
 	}
 
 	if (rate == 0) {

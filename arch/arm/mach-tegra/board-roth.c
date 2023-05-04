@@ -78,6 +78,8 @@
 #include "tegra-board-id.h"
 #include "board-touch-raydium.h"
 
+
+/*
 #ifdef CONFIG_BT_BLUESLEEP
 static struct rfkill_gpio_platform_data roth_bt_rfkill_pdata = {
 		.name           = "bt_rfkill",
@@ -174,12 +176,15 @@ static noinline void __init roth_setup_bluedroid_pm(void)
 	platform_device_register(&roth_bluedroid_pm_device);
 }
 #endif
+
+*/
 static __initdata struct tegra_clk_init_table roth_clk_init_table[] = {
 	/* name		parent		rate		enabled */
 	{ "pll_m",	NULL,		0,		false},
 	{ "hda",	"pll_p",	108000000,	false},
 	{ "hda2codec_2x", "pll_p",	48000000,	false},
 	{ "pwm",	"pll_p",	37000000,	false},
+//	{ "pwm",	"pll_p",	3187500,	false},//from  tegratab
 	{ "blink",	"clk_32k",	32768,		true},
 	{ "i2s1",	"pll_a_out0",	0,		false},
 	{ "i2s3",	"pll_a_out0",	0,		false},
@@ -250,7 +255,7 @@ static struct tegra_i2c_platform_data roth_i2c5_platform_data = {
 	.sda_gpio		= {TEGRA_GPIO_I2C5_SDA, 0},
 	.arb_recovery = arb_lost_recovery,
 };
-
+/*
 #if defined(CONFIG_ARCH_TEGRA_11x_SOC)
 static struct i2c_board_info __initdata rt5640_board_info = {
 	I2C_BOARD_INFO("rt5640", 0x1c),
@@ -264,7 +269,7 @@ static struct i2c_board_info __initdata roth_codec_tfa9887L_info = {
 	I2C_BOARD_INFO("tfa9887L", 0x34),
 };
 #endif
-
+*/
 static void roth_i2c_init(void)
 {
 	tegra11_i2c_device1.dev.platform_data = &roth_i2c1_platform_data;
@@ -279,9 +284,9 @@ static void roth_i2c_init(void)
 	platform_device_register(&tegra11_i2c_device2);
 	platform_device_register(&tegra11_i2c_device1);
 
-	i2c_register_board_info(0, &rt5640_board_info, 1);
-	i2c_register_board_info(0, &roth_codec_tfa9887R_info, 1);
-	i2c_register_board_info(0, &roth_codec_tfa9887L_info, 1);
+//	i2c_register_board_info(0, &rt5640_board_info, 1);
+//	i2c_register_board_info(0, &roth_codec_tfa9887R_info, 1);
+//	i2c_register_board_info(0, &roth_codec_tfa9887L_info, 1);
 }
 
 static struct platform_device *roth_uart_devices[] __initdata = {
@@ -365,7 +370,7 @@ static struct platform_device tegra_rtc_device = {
 	.resource = tegra_rtc_resources,
 	.num_resources = ARRAY_SIZE(tegra_rtc_resources),
 };
-
+/*
 static struct tegra_asoc_platform_data roth_audio_pdata = {
 	.gpio_spkr_en		= TEGRA_GPIO_SPKR_EN,
 	.gpio_hp_det		= TEGRA_GPIO_HP_DET,
@@ -400,8 +405,12 @@ static struct platform_device tegra_camera = {
 	.name = "tegra_camera",
 	.id = -1,
 };
+*/
 
+
+/*
 #ifdef CONFIG_LEDS_PWM
+
 static struct led_pwm roth_led_info[] = {
 	{
 		.name			= "roth-led",
@@ -451,7 +460,7 @@ static struct platform_device roth_leds_gpio_device = {
 	},
 };
 #endif
-
+*/
 static struct platform_device *roth_devices[] __initdata = {
 	&tegra_pmu_device,
 	&tegra_rtc_device,
@@ -462,7 +471,7 @@ static struct platform_device *roth_devices[] __initdata = {
 #if defined(CONFIG_TEGRA_AVP)
 	&tegra_avp_device,
 #endif
-	&tegra_camera,
+//	&tegra_camera,
 #if defined(CONFIG_CRYPTO_DEV_TEGRA_SE)
 	&tegra11_se_device,
 #endif
@@ -475,20 +484,21 @@ static struct platform_device *roth_devices[] __initdata = {
 	&tegra_i2s_device4,
 	&tegra_spdif_device,
 	&spdif_dit_device,
-	&bluetooth_dit_device,
-	&tegra_pcm_device,
-	&roth_audio_device,
-	&tegra_hda_device,
+//	&bluetooth_dit_device,
+//	&tegra_pcm_device,
+//	&roth_audio_device,
+//	&tegra_hda_device,
 #if defined(CONFIG_CRYPTO_DEV_TEGRA_AES)
 	&tegra_aes_device,
 #endif
-
+/*
 #if CONFIG_LEDS_PWM
 	&tegra_pwfm2_device,
 	&roth_leds_pwm_device,
 #else
 	&roth_leds_gpio_device,
 #endif
+*/
 };
 
 #ifdef CONFIG_USB_SUPPORT
@@ -591,12 +601,14 @@ static void roth_usb_init(void) { }
 
 static void roth_audio_init(void)
 {
+/*
 	struct board_info board_info;
 
 	tegra_get_board_info(&board_info);
 
 	roth_audio_pdata.codec_name = "rt5640.0-001c";
 	roth_audio_pdata.codec_dai_name = "rt5640-aif1";
+*/
 }
 
 
@@ -644,51 +656,51 @@ static void __init roth_spi_init(void)
 		ARRAY_SIZE(roth_spi_devices));
 }
 
-static __initdata struct tegra_clk_init_table touch_clk_init_table[] = {
-	/* name         parent          rate            enabled */
-	{ "extern2",    "pll_p",        41000000,       false},
-	{ "clk_out_2",  "extern2",      40800000,       false},
-	{ NULL,         NULL,           0,              0},
-};
+//static __initdata struct tegra_clk_init_table touch_clk_init_table[] = {
+//	/* name         parent          rate            enabled */
+//	{ "extern2",    "pll_p",        41000000,       false},
+//	{ "clk_out_2",  "extern2",      40800000,       false},
+//	{ NULL,         NULL,           0,              0},
+//};
 
-struct rm_spi_ts_platform_data rm31080ts_roth_data = {
-	.gpio_reset = TOUCH_GPIO_RST_RAYDIUM_SPI,
-	.config = 0,
-	.platform_id = RM_PLATFORM_D010,
-	.name_of_clock = "clk_out_2",
-	.name_of_clock_con = "extern2",
-};
+//struct rm_spi_ts_platform_data rm31080ts_roth_data = {
+//	.gpio_reset = TOUCH_GPIO_RST_RAYDIUM_SPI,
+//	.config = 0,
+//	.platform_id = RM_PLATFORM_D010,
+//	.name_of_clock = "clk_out_2",
+//	.name_of_clock_con = "extern2",
+//};
 
-static struct tegra_spi_device_controller_data dev_cdata = {
-	.rx_clk_tap_delay = 0,
-	.tx_clk_tap_delay = 16,
-};
+//static struct tegra_spi_device_controller_data dev_cdata = {
+//	.rx_clk_tap_delay = 0,
+//	.tx_clk_tap_delay = 16,
+//};
 
-struct spi_board_info rm31080a_roth_spi_board[1] = {
-	{
-	 .modalias = "rm_ts_spidev",
-	 .bus_num = 3,
-	 .chip_select = 2,
-	 .max_speed_hz = 12 * 1000 * 1000,
-	 .mode = SPI_MODE_0,
-	 .controller_data = &dev_cdata,
-	 .platform_data = &rm31080ts_roth_data,
-	 },
-};
+//struct spi_board_info rm31080a_roth_spi_board[1] = {
+//	{
+//	 .modalias = "rm_ts_spidev",
+//	 .bus_num = 3,
+//	 .chip_select = 2,
+//	 .max_speed_hz = 12 * 1000 * 1000,
+//	 .mode = SPI_MODE_0,
+//	 .controller_data = &dev_cdata,
+//	 .platform_data = &rm31080ts_roth_data,
+//	 },
+//};
 
-static int __init roth_touch_init(void)
-{
-	tegra_clk_init_from_table(touch_clk_init_table);
-	rm31080ts_roth_data.platform_id = RM_PLATFORM_R005;
-	rm31080a_roth_spi_board[0].irq =
-		gpio_to_irq(TOUCH_GPIO_IRQ_RAYDIUM_SPI);
-	touch_init_raydium(TOUCH_GPIO_IRQ_RAYDIUM_SPI,
-				TOUCH_GPIO_RST_RAYDIUM_SPI,
-				&rm31080ts_roth_data,
-				&rm31080a_roth_spi_board[0],
-				ARRAY_SIZE(rm31080a_roth_spi_board));
-	return 0;
-}
+//static int __init roth_touch_init(void)
+//{
+//	tegra_clk_init_from_table(touch_clk_init_table);
+//	rm31080ts_roth_data.platform_id = RM_PLATFORM_R005;
+//	rm31080a_roth_spi_board[0].irq =
+//		gpio_to_irq(TOUCH_GPIO_IRQ_RAYDIUM_SPI);
+//	touch_init_raydium(TOUCH_GPIO_IRQ_RAYDIUM_SPI,
+//				TOUCH_GPIO_RST_RAYDIUM_SPI,
+//				&rm31080ts_roth_data,
+//				&rm31080a_roth_spi_board[0],
+//				ARRAY_SIZE(rm31080a_roth_spi_board));
+//	return 0;
+//}
 
 static void __init tegra_roth_init(void)
 {
@@ -705,29 +717,32 @@ static void __init tegra_roth_init(void)
 	platform_add_devices(roth_devices, ARRAY_SIZE(roth_devices));
 	tegra_ram_console_debug_init();
 	tegra_io_dpd_init();
-	roth_regulator_init();
+//	roth_regulator_init();
 	roth_sdhci_init();
-	roth_suspend_init();
+//	roth_suspend_init();
 	roth_emc_init();
 	roth_edp_init();
-	roth_touch_init();
+//	roth_touch_init();
 	/* roth will pass a null board id to panel_init */
-	roth_panel_init(0);
-	roth_kbc_init();
-	roth_pmon_init();
+//	roth_panel_init(0);
+//	roth_kbc_init();
+//	roth_pmon_init();
+/*
 #ifdef CONFIG_BT_BLUESLEEP
 	roth_setup_bluesleep();
 	roth_setup_bt_rfkill();
 #elif defined CONFIG_BLUEDROID_PM
 	roth_setup_bluedroid_pm();
 #endif
+
+*/
 #ifdef CONFIG_TEGRA_WDT_RECOVERY
 	tegra_wdt_recovery_init();
 #endif
-	tegra_serial_debug_init(TEGRA_UARTD_BASE, INT_WDT_CPU, NULL, -1, -1);
-	roth_sensors_init();
+//	tegra_serial_debug_init(TEGRA_UARTD_BASE, INT_WDT_CPU, NULL, -1, -1);
+//	roth_sensors_init();
 	roth_soctherm_init();
-	roth_fan_init();
+//	roth_fan_init();
 	tegra_register_fuse();
 }
 

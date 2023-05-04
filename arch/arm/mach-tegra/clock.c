@@ -502,6 +502,7 @@ int clk_set_rate_locked(struct clk *c, unsigned long rate)
 	unsigned long old_rate, max_rate;
 	long new_rate;
 	bool disable = false;
+	bool auto_dvfs_tmp;
 
 	if (!c->ops || !c->ops->set_rate)
 		return -ENOSYS;
@@ -532,7 +533,21 @@ int clk_set_rate_locked(struct clk *c, unsigned long rate)
 	if ((c->refcnt == 0) && (c->flags & (DIV_U71 | DIV_U16)) &&
 		clk_is_auto_dvfs(c)) {
 		pr_debug("Setting rate of clock %s with refcnt 0\n", c->name);
-		ret = clk_enable_locked(c);
+                auto_dvfs_tmp = false;
+
+                if (c->boot_rate > rate) {
+                        printk("rate is too HIGH for DVFS :( time for hacks\n");
+                        auto_dvfs_tmp = c->auto_dvfs;
+                        c->auto_dvfs = false;
+                }
+
+                ret = clk_enable_locked(c);
+
+                if (c->boot_rate > rate) {
+                        c->auto_dvfs = auto_dvfs_tmp;
+                        c->boot_rate = 0;
+                }
+
 		if (ret)
 			goto out;
 		disable = true;
@@ -878,7 +893,7 @@ static void __init tegra_clk_verify_rates(void)
 	list_for_each_entry(c, &clocks, node) {
 		rate = clk_get_rate(c);
 		if (rate > clk_get_max_rate(c))
-			WARN(1, "tegra: %s boot rate %lu exceeds max rate %lu\n",
+			pr_warn("tegra: %s boot rate %lu exceeds max rate %lu\n",
 			     c->name, rate, clk_get_max_rate(c));
 		c->boot_rate = rate;
 	}
