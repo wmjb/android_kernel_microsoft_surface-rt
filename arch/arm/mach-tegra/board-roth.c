@@ -256,19 +256,12 @@ static struct tegra_i2c_platform_data roth_i2c5_platform_data = {
 	.arb_recovery = arb_lost_recovery,
 };
 /*
-#if defined(CONFIG_ARCH_TEGRA_11x_SOC)
+
 static struct i2c_board_info __initdata rt5640_board_info = {
 	I2C_BOARD_INFO("rt5640", 0x1c),
 };
 
-static struct i2c_board_info __initdata roth_codec_tfa9887R_info = {
-	I2C_BOARD_INFO("tfa9887R", 0x37),
-};
 
-static struct i2c_board_info __initdata roth_codec_tfa9887L_info = {
-	I2C_BOARD_INFO("tfa9887L", 0x34),
-};
-#endif
 */
 static void roth_i2c_init(void)
 {
@@ -285,8 +278,7 @@ static void roth_i2c_init(void)
 	platform_device_register(&tegra11_i2c_device1);
 
 //	i2c_register_board_info(0, &rt5640_board_info, 1);
-//	i2c_register_board_info(0, &roth_codec_tfa9887R_info, 1);
-//	i2c_register_board_info(0, &roth_codec_tfa9887L_info, 1);
+
 }
 
 static struct platform_device *roth_uart_devices[] __initdata = {
@@ -310,7 +302,7 @@ static void __init uart_debug_init(void)
 {
 	int debug_port_id;
 
-	debug_port_id = uart_console_debug_init(3);
+	debug_port_id = uart_console_debug_init(0);
 	if (debug_port_id < 0)
 		return;
 
@@ -475,13 +467,13 @@ static struct platform_device *roth_devices[] __initdata = {
 #if defined(CONFIG_CRYPTO_DEV_TEGRA_SE)
 	&tegra11_se_device,
 #endif
-	&tegra_ahub_device,
-	&tegra_dam_device0,
-	&tegra_dam_device1,
-	&tegra_dam_device2,
-	&tegra_i2s_device1,
-	&tegra_i2s_device3,
-	&tegra_i2s_device4,
+//	&tegra_ahub_device,
+//	&tegra_dam_device0,
+//	&tegra_dam_device1,
+//	&tegra_dam_device2,
+//	&tegra_i2s_device1,
+//	&tegra_i2s_device3,
+//	&tegra_i2s_device4,
 //	&tegra_spdif_device,
 //	&spdif_dit_device,
 //	&bluetooth_dit_device,
