@@ -482,8 +482,8 @@ static struct platform_device *roth_devices[] __initdata = {
 	&tegra_i2s_device1,
 	&tegra_i2s_device3,
 	&tegra_i2s_device4,
-	&tegra_spdif_device,
-	&spdif_dit_device,
+//	&tegra_spdif_device,
+//	&spdif_dit_device,
 //	&bluetooth_dit_device,
 //	&tegra_pcm_device,
 //	&roth_audio_device,
@@ -500,7 +500,7 @@ static struct platform_device *roth_devices[] __initdata = {
 #endif
 */
 };
-
+/*
 #ifdef CONFIG_USB_SUPPORT
 static struct tegra_usb_platform_data tegra_udc_pdata = {
 	.port_otg = true,
@@ -588,7 +588,7 @@ static void roth_usb_init(void)
 	tegra_otg_device.dev.platform_data = &tegra_otg_pdata;
 	platform_device_register(&tegra_otg_device);
 
-	/* Setup the udc platform data */
+	
 	tegra_udc_device.dev.platform_data = &tegra_udc_pdata;
 
 	tegra_ehci3_device.dev.platform_data = &tegra_ehci3_utmi_pdata;
@@ -601,16 +601,16 @@ static void roth_usb_init(void) { }
 
 static void roth_audio_init(void)
 {
-/*
+
 	struct board_info board_info;
 
 	tegra_get_board_info(&board_info);
 
 	roth_audio_pdata.codec_name = "rt5640.0-001c";
 	roth_audio_pdata.codec_dai_name = "rt5640-aif1";
-*/
-}
 
+}
+*/
 
 static struct platform_device *roth_spi_devices[] __initdata = {
 	&tegra11_spi_device4,
@@ -711,22 +711,22 @@ static void __init tegra_roth_init(void)
 	roth_pinmux_init();
 	roth_i2c_init();
 	roth_spi_init();
-	roth_usb_init();
+	//roth_usb_init();
 	roth_uart_init();
-	roth_audio_init();
+	//roth_audio_init();
 	platform_add_devices(roth_devices, ARRAY_SIZE(roth_devices));
 	tegra_ram_console_debug_init();
 	tegra_io_dpd_init();
 	roth_regulator_init();
-//	roth_sdhci_init();
-//	roth_suspend_init();
-//	roth_emc_init();
-//	roth_edp_init();
-//	roth_touch_init();
+	roth_sdhci_init();
+	roth_suspend_init();
+	roth_emc_init();
+	roth_edp_init();
+	//roth_touch_init();
 	/* roth will pass a null board id to panel_init */
-//	roth_panel_init(0);
-//	roth_kbc_init();
-//	roth_pmon_init();
+	//roth_panel_init(0);
+	roth_kbc_init();
+	//roth_pmon_init();
 /*
 #ifdef CONFIG_BT_BLUESLEEP
 	roth_setup_bluesleep();
@@ -740,8 +740,8 @@ static void __init tegra_roth_init(void)
 	tegra_wdt_recovery_init();
 #endif
 //	tegra_serial_debug_init(TEGRA_UARTD_BASE, INT_WDT_CPU, NULL, -1, -1);
-//	roth_sensors_init();
-	roth_soctherm_init();
+	roth_sensors_init();
+//	roth_soctherm_init();
 //	roth_fan_init();
 	tegra_register_fuse();
 }

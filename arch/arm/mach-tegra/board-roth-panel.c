@@ -70,13 +70,14 @@ struct platform_device * __init roth_host1x_init(void)
 #define roth_hdmi_hpd	TEGRA_GPIO_PN7
 
 static bool reg_requested;
-static bool gpio_requested;
+//static bool gpio_requested;
 
+/*
 static struct regulator *vdd_lcd_s_1v8;
 static struct regulator *vdd_lcd_bl;
 static struct regulator *vdd_lcd_bl_en;
 static struct regulator *avdd_lcd_3v0_2v8;
-
+*/
 static struct regulator *roth_hdmi_reg;
 static struct regulator *roth_hdmi_pll;
 static struct regulator *roth_hdmi_vddio;
@@ -182,7 +183,7 @@ static struct tegra_dsi_cmd dsi_init_cmd[] = {
 
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_internal_clk),
 
-	/*  panel power control 1 */
+	//  panel power control 1 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0xc1, 0x0),
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_pwr_ctrl3),
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_pwr_ctrl4),
@@ -196,10 +197,10 @@ static struct tegra_dsi_cmd dsi_init_cmd[] = {
 
 	DSI_CMD_SHORT(DSI_DCS_WRITE_1_PARAM, DSI_DCS_SET_ADDR_MODE, 0x08),
 
-	/* panel OTP 2 */
+	// panel OTP 2 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0xf9, 0x0),
 
-	/* panel CE 1 */
+	// panel CE 1 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0x70, 0x0),
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_ce2),
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_ce3),
@@ -214,22 +215,22 @@ static struct tegra_dsi_cmd dsi_init_cmd[] = {
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_ce12),
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_ce13),
 
-	/* panel power control 2 */
+	// panel power control 2 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0xc2, 0x02),
 	DSI_DLY_MS(20),
 
-	/* panel power control 2 */
+	// panel power control 2 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0xc2, 0x06),
 	DSI_DLY_MS(20),
 
-	/* panel power control 2 */
+	// panel power control 2 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0xc2, 0x4e),
 	DSI_DLY_MS(100),
 
 	DSI_CMD_SHORT(DSI_DCS_WRITE_0_PARAM, DSI_DCS_EXIT_SLEEP_MODE, 0x0),
 	DSI_DLY_MS(20),
 
-	/* panel OTP 2 */
+	// panel OTP 2 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0xf9, 0x80),
 	DSI_DLY_MS(20),
 
@@ -256,11 +257,11 @@ static struct tegra_dsi_out roth_dsi = {
 
 static int roth_dsi_regulator_get(struct device *dev)
 {
-	int err = 0;
+	//int err = 0;
 
 	if (reg_requested)
 		return 0;
-
+/*
 	avdd_lcd_3v0_2v8 = regulator_get(dev, "avdd_lcd");
 	if (IS_ERR_OR_NULL(avdd_lcd_3v0_2v8)) {
 		pr_err("avdd_lcd regulator get failed\n");
@@ -293,15 +294,17 @@ static int roth_dsi_regulator_get(struct device *dev)
 		vdd_lcd_bl_en = NULL;
 		goto fail;
 	}
+*/
 	reg_requested = true;
 	return 0;
-fail:
-	return err;
+//fail:
+//	return err;
 }
-
+/*
 static int roth_dsi_gpio_get(void)
 {
-	int err = 0;
+
+//	int err = 0;
 
 	if (gpio_requested)
 		return 0;
@@ -311,12 +314,13 @@ static int roth_dsi_gpio_get(void)
 		pr_err("panel reset gpio request failed\n");
 		goto fail;
 	}
-
 	gpio_requested = true;
+
 	return 0;
-fail:
-	return err;
+//fail:
+//	return err;
 }
+*/
 
 static struct tegra_dc_out roth_disp1_out;
 
@@ -325,6 +329,8 @@ static int roth_dsi_panel_enable(struct device *dev)
 	int err = 0;
 
 	err = roth_dsi_regulator_get(dev);
+
+/*
 	if (err < 0) {
 		pr_err("dsi regulator get failed\n");
 		goto fail;
@@ -370,7 +376,7 @@ static int roth_dsi_panel_enable(struct device *dev)
 		}
 	}
 
-	/* Skip panel programming if in initialized mode */
+	// Skip panel programming if in initialized mode //
 	if (roth_disp1_out.flags & TEGRA_DC_OUT_INITIALIZED_MODE)
 		return 0;
 
@@ -382,14 +388,16 @@ static int roth_dsi_panel_enable(struct device *dev)
 	gpio_set_value(DSI_PANEL_RST_GPIO, 1);
 	msleep(20);
 #endif
-
+*/
 	return 0;
-fail:
-	return err;
+//fail:
+//	return err;
 }
 
 static int roth_dsi_panel_disable(void)
 {
+	
+/*
 	if (vdd_lcd_bl)
 		regulator_disable(vdd_lcd_bl);
 
@@ -401,7 +409,7 @@ static int roth_dsi_panel_disable(void)
 
 	if (avdd_lcd_3v0_2v8)
 		regulator_disable(avdd_lcd_3v0_2v8);
-
+*/
 	return 0;
 }
 
@@ -413,15 +421,15 @@ static int roth_dsi_panel_postsuspend(void)
 
 static struct tegra_dc_mode roth_dsi_modes[] = {
 	{
-		.pclk = 66700000,
+		.pclk = (1920 + 32 + 32 + 64) * (1080 + 6 + 3 + 22) * 60 / 1000,
 		.h_ref_to_sync = 4,
 		.v_ref_to_sync = 1,
 		.h_sync_width = 4,
 		.v_sync_width = 4,
 		.h_back_porch = 112,
 		.v_back_porch = 7,
-		.h_active = 720,
-		.v_active = 1280,
+		.h_active = 1080,
+		.v_active = 1920,
 		.h_front_porch = 12,
 		.v_front_porch = 20,
 	},
@@ -442,8 +450,8 @@ static struct tegra_dc_out roth_disp1_out = {
 	.enable		= roth_dsi_panel_enable,
 	.disable	= roth_dsi_panel_disable,
 	.postsuspend	= roth_dsi_panel_postsuspend,
-	.width		= 62,
-	.height		= 110,
+	.width		= 235,
+	.height		= 132,
 };
 
 static int roth_hdmi_enable(struct device *dev)
@@ -560,8 +568,8 @@ static struct tegra_fb_data roth_disp1_fb_data = {
 	.win		= 0,
 	.bits_per_pixel = 32,
 	.flags		= TEGRA_FB_FLIP_ON_PROBE,
-	.xres		= 720,
-	.yres		= 1280,
+	.xres		= 1080,
+	.yres		= 1920,
 };
 
 static struct tegra_dc_platform_data roth_disp1_pdata = {
@@ -766,8 +774,8 @@ int __init roth_panel_init(int board_id)
 		return -EINVAL;
 	}
 
-	gpio_request(roth_hdmi_hpd, "hdmi_hpd");
-	gpio_direction_input(roth_hdmi_hpd);
+//	gpio_request(roth_hdmi_hpd, "hdmi_hpd");
+//	gpio_direction_input(roth_hdmi_hpd);
 	res = platform_get_resource_byname(&roth_disp1_device,
 					 IORESOURCE_MEM, "fbmem");
 	res->start = tegra_fb_start;

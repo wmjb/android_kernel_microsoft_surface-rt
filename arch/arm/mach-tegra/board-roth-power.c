@@ -59,11 +59,17 @@
 
 /*TPS65090 consumer rails */
 
-/*
+
 static struct regulator_consumer_supply tps65090_dcdc1_supply[] = {
 	REGULATOR_SUPPLY("vdd_sys_5v0", NULL),
 	REGULATOR_SUPPLY("vdd_spk", NULL),
 	REGULATOR_SUPPLY("vdd_sys_cam_5v0", NULL),
+	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-ehci.2"),
+	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-xhci"),
+	REGULATOR_SUPPLY("avdd_usb", "tegra-udc.0"),
+	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.0"),
+	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.1"),
+	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.2"),
 };
 
 static struct regulator_consumer_supply tps65090_dcdc2_supply[] = {
@@ -81,6 +87,8 @@ static struct regulator_consumer_supply tps65090_dcdc2_supply[] = {
 	REGULATOR_SUPPLY("vcc", "0-007c"),
 	REGULATOR_SUPPLY("vcc", "0-0030"),
 	REGULATOR_SUPPLY("vin", "2-0030"),
+	REGULATOR_SUPPLY("vdd", "0-004c"),
+
 };
 
 static struct regulator_consumer_supply tps65090_dcdc3_supply[] = {
@@ -103,7 +111,7 @@ static struct regulator_consumer_supply tps65090_fet4_supply[] = {
 	REGULATOR_SUPPLY("avdd_lcd", NULL),
 	REGULATOR_SUPPLY("avdd", "spi3.2"),
 };
-*/
+
 static struct regulator_consumer_supply tps65090_fet6_supply[] = {
 	REGULATOR_SUPPLY("vddio_sd_slot", "sdhci-tegra.2"),
 };
@@ -140,25 +148,24 @@ static struct tps65090_regulator_platform_data				\
 	.wait_timeout_us = _wait_to,					\
 }
 
-//TPS65090_PDATA_INIT(DCDC1, dcdc1, NULL, 1, 1, 0, true, -1, -1);
-//TPS65090_PDATA_INIT(DCDC2, dcdc2, NULL, 1, 1, 0, true, -1, -1);
-//TPS65090_PDATA_INIT(DCDC3, dcdc3, NULL, 1, 1, 0, true, -1, -1);
-//TPS65090_PDATA_INIT(LDO1, ldo1, tps65090_rails(DCDC1), 1, 1, 0, false, -1, -1);
-//TPS65090_PDATA_INIT(LDO2, ldo2, tps65090_rails(DCDC2), 1, 1, 0, false, -1, -1);
-//TPS65090_PDATA_INIT(FET1, fet1, NULL, 1, 1, 0, false, -1, 800);
-
-//TPS65090_PDATA_INIT(FET4, fet4, NULL, 1, 1, 0, false, -1, 0);
+TPS65090_PDATA_INIT(DCDC1, dcdc1, NULL, 1, 1, 0, true, -1, -1);
+TPS65090_PDATA_INIT(DCDC2, dcdc2, NULL, 1, 1, 0, true, -1, -1);
+TPS65090_PDATA_INIT(DCDC3, dcdc3, NULL, 1, 1, 0, true, -1, -1);
+TPS65090_PDATA_INIT(LDO1, ldo1, tps65090_rails(DCDC1), 1, 1, 0, false, -1, -1);
+TPS65090_PDATA_INIT(LDO2, ldo2, tps65090_rails(DCDC2), 1, 1, 0, false, -1, -1);
+TPS65090_PDATA_INIT(FET1, fet1, NULL, 1, 1, 0, false, -1, 800);
+TPS65090_PDATA_INIT(FET4, fet4, NULL, 1, 1, 0, false, -1, 0);
 TPS65090_PDATA_INIT(FET6, fet6, NULL, 1, 1, 0, false, -1, 0);
 
 #define ADD_TPS65090_REG(_name) (&tps65090_regulator_pdata_##_name)
 static struct tps65090_regulator_platform_data *tps65090_reg_pdata[] = {
-//	ADD_TPS65090_REG(dcdc1),
-//	ADD_TPS65090_REG(dcdc2),
-//	ADD_TPS65090_REG(dcdc3),
-//	ADD_TPS65090_REG(ldo1),
-//	ADD_TPS65090_REG(ldo2),
-//	ADD_TPS65090_REG(fet1),
-//	ADD_TPS65090_REG(fet4),
+	ADD_TPS65090_REG(dcdc1),
+	ADD_TPS65090_REG(dcdc2),
+	ADD_TPS65090_REG(dcdc3),
+	ADD_TPS65090_REG(ldo1),
+	ADD_TPS65090_REG(ldo2),
+	ADD_TPS65090_REG(fet1),
+	ADD_TPS65090_REG(fet4),
 	ADD_TPS65090_REG(fet6),
 };
 
@@ -176,7 +183,7 @@ static struct i2c_board_info __initdata tps65090_regulators[] = {
 	},
 };
 
-/*
+
 
 static struct regulator_consumer_supply palmas_smps123_supply[] = {
 	REGULATOR_SUPPLY("vdd_cpu", NULL),
@@ -199,9 +206,9 @@ static struct regulator_consumer_supply palmas_smps6_supply[] = {
 
 
 
-static struct regulator_consumer_supply palmas_smps8_supply[] = {
-	REGULATOR_SUPPLY("vdd_1v8", NULL),
-};
+//static struct regulator_consumer_supply palmas_smps8_supply[] = {
+//	REGULATOR_SUPPLY("vdd_1v8", NULL),
+//};
 
 static struct regulator_consumer_supply palmas_smps9_supply[] = {
 	REGULATOR_SUPPLY("vdd_1v05", NULL),
@@ -209,12 +216,11 @@ static struct regulator_consumer_supply palmas_smps9_supply[] = {
 
 static struct regulator_consumer_supply palmas_ldo1_supply[] = {
 
-
 };
 
-static struct regulator_consumer_supply palmas_ldo2_supply[] = {
+//static struct regulator_consumer_supply palmas_ldo2_supply[] = {
 
-};
+//};
 
 static struct regulator_consumer_supply palmas_ldo3_supply[] = {
 	REGULATOR_SUPPLY("avdd_dsi_csi", "tegradc.0"),
@@ -222,35 +228,32 @@ static struct regulator_consumer_supply palmas_ldo3_supply[] = {
 	REGULATOR_SUPPLY("avdd_dsi_csi", "vi"),
 	REGULATOR_SUPPLY("pwrdet_mipi", NULL),
 };
-
+/*
 static struct regulator_consumer_supply palmas_ldo5_supply[] = {
-	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-ehci.2"),
-	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-xhci"),
-};
-
-static struct regulator_consumer_supply palmas_ldo7_supply[] = {
 
 };
+*/
+//static struct regulator_consumer_supply palmas_ldo7_supply[] = {
+//
+//};
 
 static struct regulator_consumer_supply palmas_ldo8_supply[] = {
 	REGULATOR_SUPPLY("vdd_rtc", NULL),
 };
-*/
+
 static struct regulator_consumer_supply palmas_ldo9_supply[] = {
 	REGULATOR_SUPPLY("vddio_sdmmc", "sdhci-tegra.2"),
 	REGULATOR_SUPPLY("vddio_sdmmc", "sdhci-tegra.0"),
+
 };
+
+//static struct regulator_consumer_supply palmas_ldoln_supply[] = {
+//
+//};
+
 /*
-static struct regulator_consumer_supply palmas_ldoln_supply[] = {
-
-};
-
-
 static struct regulator_consumer_supply palmas_ldousb_supply[] = {
-	REGULATOR_SUPPLY("avdd_usb", "tegra-udc.0"),
-	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.0"),
-	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.1"),
-	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.2"),
+
 
 };
 
@@ -263,41 +266,41 @@ static struct regulator_consumer_supply palmas_sysen1_supply[] = {
 
 };
 
-
+*/
 
 PALMAS_PDATA_INIT(smps123, 1100,  1100, NULL, 0, 0, 0, NORMAL);//
 PALMAS_PDATA_INIT(smps457, 1100,  1100, NULL, 1, 1, 0, NORMAL);
 PALMAS_PDATA_INIT(smps6, 850,  850, NULL, 1, 1, 1, NORMAL);
-PALMAS_PDATA_INIT(smps8, 1800,  1800, NULL, 1, 1, 1, NORMAL);
+//PALMAS_PDATA_INIT(smps8, 1800,  1800, NULL, 1, 1, 1, NORMAL);
 PALMAS_PDATA_INIT(smps9, 1050,  1050, NULL, 0, 0, 0, 0);
 PALMAS_PDATA_INIT(ldo1, 1200,  1200, NULL, 0, 0, 1, 0);
-PALMAS_PDATA_INIT(ldo2, 2800,  2800, NULL, 1, 1, 1, 0);
+//PALMAS_PDATA_INIT(ldo2, 2800,  2800, NULL, 1, 1, 1, 0);
 PALMAS_PDATA_INIT(ldo3, 1200,  1200, NULL, 0, 0, 1, 0);
-PALMAS_PDATA_INIT(ldo5, 1800,  1800, NULL, 1, 1, 1, 0);
-PALMAS_PDATA_INIT(ldo7, 1800,  1800, NULL, 0, 0, 1, 0);
+//PALMAS_PDATA_INIT(ldo5, 1800,  1800, NULL, 1, 1, 1, 0);
+//PALMAS_PDATA_INIT(ldo7, 1800,  1800, NULL, 0, 0, 1, 0);
 PALMAS_PDATA_INIT(ldo8, 1200,  1200, NULL, 0, 0, 1, 0);
-*/
+
 PALMAS_PDATA_INIT(ldo9, 1800,  3300, NULL, 0, 0, 1, 0);
-/*
-PALMAS_PDATA_INIT(ldoln, 1800,  1800, NULL, 0, 0, 1, 0);
-PALMAS_PDATA_INIT(ldousb, 3300,  3300, NULL, 0, 0, 1, 0);
-PALMAS_PDATA_INIT(regen2, 5000,  5000, NULL, 0, 0, 0, 0);
-PALMAS_PDATA_INIT(sysen1, 3300,  3300, NULL, 0, 0, 0, 0);
-*/
+
+//PALMAS_PDATA_INIT(ldoln, 1800,  1800, NULL, 0, 0, 1, 0);
+//PALMAS_PDATA_INIT(ldousb, 3300,  3300, NULL, 0, 0, 1, 0);
+//PALMAS_PDATA_INIT(regen2, 5000,  5000, NULL, 0, 0, 0, 0);
+//PALMAS_PDATA_INIT(sysen1, 3300,  3300, NULL, 0, 0, 0, 0);
+
 
 #define PALMAS_REG_PDATA(_sname) &reg_idata_##_sname
 static struct regulator_init_data *roth_reg_data[PALMAS_NUM_REGS] = {
-//	PALMAS_REG_PDATA(smps123),
-//	PALMAS_REG_PDATA(smps457),
-//	PALMAS_REG_PDATA(smps6),
+	PALMAS_REG_PDATA(smps123),
+	PALMAS_REG_PDATA(smps457),
+	PALMAS_REG_PDATA(smps6),
 //	PALMAS_REG_PDATA(smps8),
-//	PALMAS_REG_PDATA(smps9),
-//	PALMAS_REG_PDATA(ldo1),
+	PALMAS_REG_PDATA(smps9),
+	PALMAS_REG_PDATA(ldo1),
 //	PALMAS_REG_PDATA(ldo2),
-//	PALMAS_REG_PDATA(ldo3),
+	PALMAS_REG_PDATA(ldo3),
 //	PALMAS_REG_PDATA(ldo5),
 //	PALMAS_REG_PDATA(ldo7),
-//	PALMAS_REG_PDATA(ldo8),
+	PALMAS_REG_PDATA(ldo8),
 	PALMAS_REG_PDATA(ldo9),
 //	PALMAS_REG_PDATA(ldoln),
 //	PALMAS_REG_PDATA(ldousb),
@@ -315,40 +318,40 @@ static struct regulator_init_data *roth_reg_data[PALMAS_NUM_REGS] = {
 		.vsel = _vsel,						\
 	}
 
-/*
+
 PALMAS_REG_INIT(smps123, 0, 0, 0, 0, 0);
 PALMAS_REG_INIT(smps457, 0, PALMAS_EXT_CONTROL_NSLEEP, 0, 0, 0);
 PALMAS_REG_INIT(smps6, 0, 0, 0, 0, 0);
-PALMAS_REG_INIT(smps8, 0, 0, 0, 0, 0);
+//PALMAS_REG_INIT(smps8, 0, 0, 0, 0, 0);
 PALMAS_REG_INIT(smps9, 0, 0, 0, 0, 0);
 PALMAS_REG_INIT(ldo1, 0, 0, 0, 0, 0);
-PALMAS_REG_INIT(ldo2, 0, 0, 0, 0, 0);
+//PALMAS_REG_INIT(ldo2, 0, 0, 0, 0, 0);
 PALMAS_REG_INIT(ldo3, 0, 0, 0, 0, 0);
-PALMAS_REG_INIT(ldo5, 0, 0, 0, 0, 0);
-PALMAS_REG_INIT(ldo7, 0, 0, 0, 0, 0);
+//PALMAS_REG_INIT(ldo5, 0, 0, 0, 0, 0);
+//PALMAS_REG_INIT(ldo7, 0, 0, 0, 0, 0);
 PALMAS_REG_INIT(ldo8, 0, 0, 0, 0, 0);
-*/
+
 PALMAS_REG_INIT(ldo9, 1, 0, 0, 0, 0);
-/*
-PALMAS_REG_INIT(ldoln, 0, 0, 0, 0, 0);
-PALMAS_REG_INIT(ldousb, 0, 0, 0, 0, 0);
-PALMAS_REG_INIT(regen2, 0, 0, 0, 0, 0);
-PALMAS_REG_INIT(sysen1, 0, 0, 0, 0, 0);
-*/
+
+//PALMAS_REG_INIT(ldoln, 0, 0, 0, 0, 0);
+//PALMAS_REG_INIT(ldousb, 0, 0, 0, 0, 0);
+//PALMAS_REG_INIT(regen2, 0, 0, 0, 0, 0);
+//PALMAS_REG_INIT(sysen1, 0, 0, 0, 0, 0);
+
 
 #define PALMAS_REG_INIT_DATA(_sname) &reg_init_data_##_sname
 static struct palmas_reg_init *roth_reg_init[PALMAS_NUM_REGS] = {
-//	PALMAS_REG_INIT_DATA(smps123),
-//	PALMAS_REG_INIT_DATA(smps457),
-//	PALMAS_REG_INIT_DATA(smps6),
+	PALMAS_REG_INIT_DATA(smps123),
+	PALMAS_REG_INIT_DATA(smps457),
+	PALMAS_REG_INIT_DATA(smps6),
 //	PALMAS_REG_INIT_DATA(smps8),
-//	PALMAS_REG_INIT_DATA(smps9),
-//	PALMAS_REG_INIT_DATA(ldo1),
+	PALMAS_REG_INIT_DATA(smps9),
+	PALMAS_REG_INIT_DATA(ldo1),
 //	PALMAS_REG_INIT_DATA(ldo2),
-//	PALMAS_REG_INIT_DATA(ldo3),
+	PALMAS_REG_INIT_DATA(ldo3),
 //	PALMAS_REG_INIT_DATA(ldo5),
 //	PALMAS_REG_INIT_DATA(ldo7),
-//	PALMAS_REG_INIT_DATA(ldo8),
+	PALMAS_REG_INIT_DATA(ldo8),
 	PALMAS_REG_INIT_DATA(ldo9),
 //	PALMAS_REG_INIT_DATA(ldoln),
 //	PALMAS_REG_INIT_DATA(ldousb),
@@ -357,8 +360,8 @@ static struct palmas_reg_init *roth_reg_init[PALMAS_NUM_REGS] = {
 };
 
 static struct palmas_pmic_platform_data pmic_platform = {
-	.enable_ldo8_tracking = true,
-	.disabe_ldo8_tracking_suspend = true,
+//	.enable_ldo8_tracking = true,
+//	.disabe_ldo8_tracking_suspend = true,
 };
 
 static struct palmas_pinctrl_config palmas_pincfg[] = {
