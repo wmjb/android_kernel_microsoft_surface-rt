@@ -712,7 +712,7 @@ static void __init tegra_roth_init(void)
 	roth_regulator_init();
 	roth_sdhci_init();
 	roth_suspend_init();
-	roth_emc_init();
+//	roth_emc_init();
 	roth_edp_init();
 	//roth_touch_init();
 	/* roth will pass a null board id to panel_init */
