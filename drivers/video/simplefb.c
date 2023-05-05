@@ -89,7 +89,7 @@ struct simplefb_params {
 	u32 stride;
 	struct simplefb_format *format;
 };
-
+/*
 static int simplefb_parse_dt(struct platform_device *pdev,
 			   struct simplefb_params *params)
 {
@@ -99,28 +99,12 @@ static int simplefb_parse_dt(struct platform_device *pdev,
 	int i;
 
 	ret = of_property_read_u32(np, "width", &params->width);
-	if (ret) {
-		dev_err(&pdev->dev, "Can't parse width property\n");
-		return ret;
-	}
-
 	ret = of_property_read_u32(np, "height", &params->height);
-	if (ret) {
-		dev_err(&pdev->dev, "Can't parse height property\n");
-		return ret;
-	}
-
 	ret = of_property_read_u32(np, "stride", &params->stride);
-	if (ret) {
-		dev_err(&pdev->dev, "Can't parse stride property\n");
-		return ret;
-	}
-
 	ret = of_property_read_string(np, "format", &format);
-	if (ret) {
-		dev_err(&pdev->dev, "Can't parse format property\n");
-		return ret;
-	}
+
+
+
 	params->format = NULL;
 	for (i = 0; i < ARRAY_SIZE(simplefb_formats); i++) {
 		if (strcmp(format, simplefb_formats[i].name))
@@ -135,20 +119,20 @@ static int simplefb_parse_dt(struct platform_device *pdev,
 
 	return 0;
 }
-
+*/
 static int simplefb_parse_pd(struct platform_device *pdev,
 			     struct simplefb_params *params)
 {
 	struct simplefb_platform_data *pd = dev_get_platdata(&pdev->dev);
 	int i;
 
-	params->width = pd->width;
-	params->height = pd->height;
-	params->stride = pd->stride;
+	params->width = 1920;//pd->width;
+	params->height = 1024;//pd->height;
+	params->stride = 2560;//pd->stride;
 
 	params->format = NULL;
 	for (i = 0; i < ARRAY_SIZE(simplefb_formats); i++) {
-		if (strcmp(pd->format, simplefb_formats[i].name))
+		if (strcmp("r5g6b5", simplefb_formats[i].name))
 			continue;
 
 		params->format = &simplefb_formats[i];
@@ -174,10 +158,10 @@ static int simplefb_probe(struct platform_device *pdev)
 		return -ENODEV;
 
 	ret = -ENODEV;
-	if (dev_get_platdata(&pdev->dev))
+//	if (dev_get_platdata(&pdev->dev))
 		ret = simplefb_parse_pd(pdev, &params);
-	else if (pdev->dev.of_node)
-		ret = simplefb_parse_dt(pdev, &params);
+//	else if (pdev->dev.of_node)
+//		ret = simplefb_parse_dt(pdev, &params);
 
 	if (ret)
 		return ret;
